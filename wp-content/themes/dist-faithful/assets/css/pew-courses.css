@@ -1,0 +1,64 @@
+/* Client feedback 02: expose only Electrical and Welding in the course selector. */
+.pew-course-selector {
+	width: 198px;
+	background-image: none;
+}
+
+.course-hidden {
+	display: none !important;
+}
+
+.pew-course-selector a.course-electrical,
+.pew-course-selector a.course-welding {
+	position: relative;
+	width: 89px;
+	height: 72px;
+	margin-right: 20px;
+	padding: 25px 0 0;
+	background-image: none;
+	text-indent: -1000px;
+}
+
+.pew-course-selector a.course-welding {
+	margin-right: 0;
+}
+
+.pew-course-selector a.course-electrical::before,
+.pew-course-selector a.course-welding::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 89px;
+	height: 84px;
+	background-image: url('../images/boxcontainer.png');
+	background-repeat: no-repeat;
+}
+
+.pew-course-selector a.course-electrical::before {
+	background-position: -108px 0;
+}
+
+.pew-course-selector a.course-welding::before {
+	background-position: -320px 0;
+}
+
+.pew-course-selector a.course-electrical::after,
+.pew-course-selector a.course-welding::after {
+	position: absolute;
+	top: 84px;
+	left: 0;
+	width: 89px;
+	color: #fff;
+	font: 14px/13px Georgia, Arial, sans-serif;
+	text-align: center;
+	text-indent: 0;
+}
+
+.pew-course-selector a.course-electrical::after {
+	content: attr(data-course-label);
+}
+
+.pew-course-selector a.course-welding::after {
+	content: attr(data-course-label);
+}

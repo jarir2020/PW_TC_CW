@@ -36,7 +36,28 @@ php -r 'require getcwd()."/wp-load.php"; require getcwd()."/scripts/import-live-
 
 The first imports the homepage reference records. The second copies public page-body HTML from the live site into WordPress pages. Do not run these against production without taking a database backup first.
 
-## Project structure
+## Admin panel
+
+Open the standalone administrator panel at <http://127.0.0.1:8090/admin-panel/>; it contains its own login form and does not require opening `wp-login.php`.
+
+Seed or refresh the demo administrator from the ignored `.env` values (`WP_USERNAME` / `WP_PASSWORD` or `PEW_ADMIN_USERNAME` / `PEW_ADMIN_PASSWORD`):
+
+~~~bash
+php scripts/seed-demo-admin.php
+~~~
+
+The panel includes Dashboard, Notice Board, Gallery, Certificates, Course Settings, and Profile.
+- **Notice Board:** Create, edit, publish, attach PDFs/images, and trash notices shown on the homepage ticker and board.
+- **Gallery:** Upload, edit titles/captions, and manage photos displayed on `/page/albums/` with interactive lightbox.
+- **Certificates:** Issue, edit, and trash verified trainee certificates searchable publicly at `/page/certificate-verification/`.
+- **Course Settings:** Toggle visibility and labels for Electrical and Welding programs.
+
+Seed demo content:
+
+~~~bash
+php scripts/seed-demo-gallery.php
+php scripts/seed-demo-certificates.php
+~~~
 
 - wp-content/themes/dist-faithful/ — faithful public theme and imported frontend assets.
 - wp-content/plugins/pew-site-core/ — custom post types, roles, dashboard, and admin behavior.

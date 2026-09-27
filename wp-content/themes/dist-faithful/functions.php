@@ -22,7 +22,10 @@ function dist_faithful_asset( $path ) {
 }
 
 function dist_faithful_enqueue_styles() {
-	$styles = array( 'reset', '960', 'ie', 'slider', 'theme', 'ticker-style', 'slider-theame', 'fonts', 'jquery.fancybox', 'jquery.fancybox-buttons', 'jquery.fancybox-thumbs', 'style', 'menu', 'prettyCheckable', 'result' );
+	if ( is_page( 'admin-panel' ) ) {
+		return;
+	}
+	$styles = array( 'reset', '960', 'ie', 'slider', 'theme', 'ticker-style', 'slider-theame', 'fonts', 'jquery.fancybox', 'jquery.fancybox-buttons', 'jquery.fancybox-thumbs', 'style', 'menu', 'prettyCheckable', 'result', 'pew-courses', 'pew-public' );
 	foreach ( $styles as $style ) {
 		wp_enqueue_style( 'dist-' . sanitize_key( $style ), dist_faithful_asset( 'css/' . $style . '.css' ), array(), DIST_FAITHFUL_VERSION );
 	}
@@ -32,6 +35,9 @@ function dist_faithful_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'dist_faithful_enqueue_styles', 5 );
 
 function dist_faithful_enqueue_scripts() {
+	if ( is_page( 'admin-panel' ) ) {
+		return;
+	}
 	wp_deregister_script( 'jquery' );
 	wp_register_script( 'jquery', dist_faithful_asset( 'js/jquery/jquery.min.js' ), array(), '1.8.3', false );
 	wp_enqueue_script( 'jquery' );
@@ -125,24 +131,33 @@ function dist_faithful_calendar() {
 }
 
 function dist_faithful_nav() {
+	$course_settings = function_exists( 'pew_admin_course_settings' ) ? pew_admin_course_settings() : array( 'electrical_label' => 'Electrical', 'welding_label' => 'Welding', 'electrical_enabled' => 1, 'welding_enabled' => 1 );
 	$items = array(
 		array( 'label' => 'হোম পেজ', 'url' => home_url( '/' ) ),
 		array( 'label' => 'প্রাতিষ্ঠানিক কার্যক্রম', 'children' => array( array( 'label' => 'বাৎসরিক কার্যক্রম', 'slug' => 'anual_activities' ), array( 'label' => 'পাঠ্যক্রম', 'slug' => 'courses' ), array( 'label' => 'কোর্স সমুহ', 'slug' => 'school_courses' ), array( 'label' => 'পরীক্ষার ফল', 'slug' => 'exam_result' ), array( 'label' => 'ডকুমেন্টারি', 'slug' => 'documentaries' ) ) ),
 		array( 'label' => 'গ্যালারি', 'url' => dist_faithful_page_url( 'albums' ) ),
-		array( 'label' => 'অন্যান্য তথ্য', 'children' => array( array( 'label' => 'কলেজ ইতিহাস', 'slug' => 'history' ), array( 'label' => 'নিয়ম কানুন', 'slug' => 'discipline' ), array( 'label' => 'পাঠাগার', 'slug' => 'library' ), array( 'label' => 'ছাত্রাবাস', 'slug' => 'dormitory' ), array( 'label' => 'প্রয়োজনীয় ডাউনলোড', 'slug' => 'ডাউনলোড' ), array( 'label' => 'লাইব্রেরী', 'slug' => 'library2' ) ) ),
+		array( 'label' => 'অন্যান্য তথ্য', 'children' => array( array( 'label' => 'প্রতিষ্ঠানের ইতিহাস', 'slug' => 'history' ), array( 'label' => 'নিয়ম কানুন', 'slug' => 'discipline' ), array( 'label' => 'পাঠাগার', 'slug' => 'library' ), array( 'label' => 'ছাত্রাবাস', 'slug' => 'dormitory' ), array( 'label' => 'প্রয়োজনীয় ডাউনলোড', 'slug' => 'ডাউনলোড' ), array( 'label' => 'লাইব্রেরী', 'slug' => 'library2' ) ) ),
 		array( 'label' => 'যোগাযোগ', 'url' => dist_faithful_page_url( 'contact' ) ),
-		array( 'label' => 'ভর্তি তথ্য' ),
-		array( 'label' => 'টেকনোলজি', 'children' => array( array( 'label' => 'Diploma-in-Civil Engg.', 'slug' => 'civil-1' ), array( 'label' => 'Diploma-in-Electical Engg.', 'slug' => 'electrical-1' ), array( 'label' => 'Diploma-in-Computer-Science', 'slug' => 'Diploma-in-Computer-Science' ), array( 'label' => 'Diploma-in-Electronics Engg.', 'slug' => 'engineering-1' ), array( 'label' => 'Diploma-in-Mechanical Engg.', 'slug' => 'mechanical-1' ), array( 'label' => 'Diploma-in-Textial Engg.', 'slug' => 'textile-1' ) ) ),
-		array( 'label' => 'কলেজ প্রশাসন', 'children' => array( array( 'label' => 'অধ্যক্ষ', 'slug' => 'principal' ), array( 'label' => 'উপাধ্যক্ষ', 'slug' => 'viceprincipal' ), array( 'label' => 'শিক্ষক বৃন্দ', 'slug' => 'asssistant-teacher' ), array( 'label' => 'কমর্কর্তা-কর্মচারী', 'slug' => 'staff' ), array( 'label' => 'পিটিএ' ), array( 'label' => 'পরিচালনা পরিষদ', 'slug' => 'porichalona_porishad' ), array( 'label' => 'প্রাক্তন অধ্যক্ষবৃন্দ' ) ) ),
-		array( 'label' => 'রেজাল্ট অনুসন্ধান', 'url' => dist_faithful_page_url( 'student-results' ) ),
-		array( 'label' => 'স্টুডেন্ট আইডি অনুসন্ধান', 'url' => dist_faithful_page_url( 'student-id' ) ),
-		array( 'label' => 'জব প্লেসমেন্ট', 'url' => dist_faithful_page_url( 'job-placement' ) ),
-		array( 'label' => 'ব্লগ', 'url' => home_url( '/blog/' ) ),
+		array( 'label' => 'ভর্তি তথ্য', 'url' => dist_faithful_page_url( 'admission' ) ),
+		array( 'label' => 'টেকনোলজি', 'children' => array( array( 'label' => 'Diploma-in-Civil Engg.', 'slug' => 'civil-1', 'visible' => false ), array( 'label' => $course_settings['electrical_label'], 'slug' => 'electrical-1', 'visible' => ! empty( $course_settings['electrical_enabled'] ) ), array( 'label' => 'Diploma-in-Computer-Science', 'slug' => 'Diploma-in-Computer-Science', 'visible' => false ), array( 'label' => 'Diploma-in-Electronics Engg.', 'slug' => 'engineering-1', 'visible' => false ), array( 'label' => $course_settings['welding_label'], 'slug' => 'mechanical-1', 'visible' => ! empty( $course_settings['welding_enabled'] ) ), array( 'label' => 'Diploma-in-Textial Engg.', 'slug' => 'textile-1', 'visible' => false ) ) ),
+		array( 'label' => 'সনদ যাচাই', 'url' => dist_faithful_page_url( 'certificate-verification' ) ),
 	);
 	?>
 	<ul class="menu">
 		<?php foreach ( $items as $index => $item ) : ?><li class="<?php echo 0 === $index ? 'current' : ''; ?>"><a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" id="link-<?php echo esc_attr( 56 + $index ); ?>" class="<?php echo 0 === $index ? 'selected' : ''; ?>"><span><?php echo esc_html( $item['label'] ); ?></span></a>
-		<?php if ( ! empty( $item['children'] ) ) : ?><div><ul><?php foreach ( $item['children'] as $child ) : ?><li><a href="<?php echo esc_url( ! empty( $child['slug'] ) ? dist_faithful_page_url( $child['slug'] ) : '#' ); ?>" id="link-<?php echo esc_attr( 59 + $index ); ?>"><span><?php echo esc_html( $child['label'] ); ?></span></a></li><?php endforeach; ?></ul></div><?php endif; ?></li><?php endforeach; ?>
+		<?php if ( ! empty( $item['children'] ) ) : ?><div><ul><?php foreach ( $item['children'] as $child ) : ?><li<?php echo isset( $child['visible'] ) && false === $child['visible'] ? ' class="course-hidden"' : ''; ?>><a href="<?php echo esc_url( ! empty( $child['slug'] ) ? dist_faithful_page_url( $child['slug'] ) : '#' ); ?>" id="link-<?php echo esc_attr( 59 + $index ); ?>"><span><?php echo esc_html( $child['label'] ); ?></span></a></li><?php endforeach; ?></ul></div><?php endif; ?></li><?php endforeach; ?>
 	</ul>
 	<?php
 }
+
+function pew_redirect_removed_pages() {
+	if ( is_page( array( 'student-results', 'student-id' ) ) ) {
+		wp_safe_redirect( dist_faithful_page_url( 'certificate-verification' ), 301 );
+		exit;
+	}
+	if ( is_page( 'job-placement' ) ) {
+		wp_safe_redirect( home_url( '/' ), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'pew_redirect_removed_pages' );

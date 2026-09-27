@@ -20,8 +20,9 @@ function pew_core_post_types() {
 		'pew_staff'    => array( 'শিক্ষক ও কর্মী', 'শিক্ষক ও কর্মী', 'dashicons-groups', true ),
 		'pew_result'   => array( 'ফলাফল', 'ফলাফল', 'dashicons-chart-bar', true ),
 		'pew_document' => array( 'ডকুমেন্ট', 'ডকুমেন্ট', 'dashicons-media-document', true ),
-		'pew_gallery'  => array( 'গ্যালারি', 'গ্যালারি', 'dashicons-format-gallery', true ),
-		'pew_event'    => array( 'ইভেন্ট', 'ইভেন্ট', 'dashicons-calendar-alt', true ),
+		'pew_gallery'     => array( 'গ্যালারি', 'গ্যালারি', 'dashicons-format-gallery', true ),
+		'pew_event'       => array( 'ইভেন্ট', 'ইভেন্ট', 'dashicons-calendar-alt', true ),
+		'pew_certificate' => array( 'সনদপত্র', 'সনদপত্র', 'dashicons-awards', true ),
 	);
 }
 
@@ -158,7 +159,7 @@ function pew_dashboard_shortcode() {
 	ob_start();
 	?>
 	<section class="dashboard-shell">
-		<div class="dashboard-head"><div><span class="kicker">ব্যক্তিগত পোর্টাল</span><h2>স্বাগতম, <?php echo esc_html( $user->display_name ); ?></h2><p><?php echo esc_html( $role_label ); ?> · আপনার প্রয়োজনীয় তথ্য এক জায়গায়।</p></div><a class="text-link" href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>">লগ আউট <span>↗</span></a></div>
+		<div class="dashboard-head"><div><span class="kicker">ব্যক্তিগত পোর্টাল</span><h2>স্বাগতম, <?php echo esc_html( $user->display_name ); ?></h2><p><?php echo esc_html( $role_label ); ?> · আপনার প্রয়োজনীয় তথ্য এক জায়গায়।</p></div><a class="text-link" href="<?php echo esc_url( function_exists( 'pew_admin_panel_logout_url' ) ? pew_admin_panel_logout_url() : wp_logout_url( home_url( '/' ) ) ); ?>">লগ আউট <span>↗</span></a></div>
 		<div class="dashboard-cards"><?php foreach ( $cards as $card ) : ?><a href="<?php echo esc_url( $card['url'] ?: home_url( '/' ) ); ?>"><strong><?php echo esc_html( $card['value'] ); ?></strong><span><?php echo esc_html( $card['label'] ); ?></span><i>↗</i></a><?php endforeach; ?></div>
 		<div class="dashboard-message"><span class="side-icon"><?php echo pew_dashboard_icon(); ?></span><div><h3>আপনার তথ্য নিয়মিত আপডেট করুন</h3><p>প্রোফাইল, একাডেমিক তথ্য ও যোগাযোগের বিবরণ সঠিক রাখলে প্রতিষ্ঠান থেকে প্রয়োজনীয় আপডেট সহজে পাওয়া যাবে।</p></div></div>
 	</section>
@@ -170,6 +171,54 @@ add_shortcode( 'pew_user_dashboard', 'pew_dashboard_shortcode' );
 function pew_dashboard_icon() {
 	return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.7"/></svg>';
 }
+
+function pew_gallery_shortcode() {
+	$items = get_posts(
+		array(
+			'post_type'      => 'pew_gallery',
+			'post_status'    => 'publish',
+			'posts_per_page' => 60,
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'no_found_rows'  => true,
+		)
+	);
+	ob_start();
+	?>
+	<div class="pew-gallery-intro"><p>Explore moments from PEW Training Center training, practical sessions, and community activities.</p></div>
+	<?php if ( $items ) : ?>
+		<ul class="galleryIn pew-gallery-managed">
+			<?php foreach ( $items as $item ) : ?>
+				<?php
+				$image_id = get_post_thumbnail_id( $item->ID );
+				$full_url = $image_id ? wp_get_attachment_image_url( $image_id, 'full' ) : '';
+				$image    = $image_id ? wp_get_attachment_image( $image_id, 'large', false, array( 'alt' => get_the_title( $item->ID ), 'loading' => 'lazy' ) ) : '';
+				if ( ! $full_url || ! $image ) {
+					continue;
+				}
+				$caption = get_the_excerpt( $item->ID );
+				?>
+				<li>
+					<a class="fancybox" rel="pew-gallery" href="<?php echo esc_url( $full_url ); ?>" title="<?php echo esc_attr( get_the_title( $item->ID ) ); ?>"><?php echo wp_kses_post( $image ); ?><span aria-hidden="true"></span></a>
+					<div class="pew-gallery-caption"><strong><?php echo esc_html( get_the_title( $item->ID ) ); ?></strong><?php if ( $caption ) : ?><small><?php echo esc_html( $caption ); ?></small><?php endif; ?></div>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	<?php else : ?>
+		<p class="pew-gallery-empty">Gallery images will be published here by the PEW Training Center administration.</p>
+	<?php endif; ?>
+	<?php
+	return ob_get_clean();
+}
+add_shortcode( 'pew_gallery', 'pew_gallery_shortcode' );
+
+function pew_gallery_page_content( $content ) {
+	if ( is_page( 'albums' ) && in_the_loop() && is_main_query() && false === strpos( $content, 'pew_gallery' ) ) {
+		$content .= pew_gallery_shortcode();
+	}
+	return $content;
+}
+add_filter( 'the_content', 'pew_gallery_page_content', 20 );
 
 function pew_register_meta_boxes() {
 	add_meta_box( 'pew_resource_details', 'রিসোর্সের তথ্য', 'pew_resource_meta_box', array( 'pew_document', 'pew_result', 'pew_event' ), 'normal', 'default' );
@@ -206,3 +255,5 @@ function pew_save_resource_details( $post_id ) {
 }
 add_action( 'save_post', 'pew_save_resource_details' );
 
+require_once __DIR__ . '/includes/admin-panel.php';
+require_once __DIR__ . '/includes/certificates.php';

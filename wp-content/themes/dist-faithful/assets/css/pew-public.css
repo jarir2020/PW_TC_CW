@@ -1,0 +1,99 @@
+.pew-gallery-managed{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;float:none!important;padding:20px 0 0!important;margin:0!important;list-style:none}
+.pew-gallery-managed li{width:auto!important;height:auto!important;float:none!important;margin:0!important;padding:6px!important;border:1px solid #d8d8d8!important;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow:visible!important}
+.pew-gallery-managed li a{height:150px;overflow:hidden;background:#f4f4f4;display:block}
+.pew-gallery-managed li a img{width:100%;height:150px;object-fit:cover;display:block}
+.pew-gallery-managed li a span{top:auto!important;right:7px!important;bottom:7px!important}
+.pew-gallery-caption{padding:8px 3px 4px;line-height:1.4}
+.pew-gallery-caption strong{display:block;color:#174b73;font-size:13px}
+.pew-gallery-caption small{display:block;margin-top:3px;color:#74818b;font-size:11px}
+.pew-gallery-empty{padding:18px;background:#f8f8f8;color:#65727c}
+
+/* Certificate Verification Styles */
+.pew-cert-portal{background:#fff;padding:10px 5px;font-family:Arial,sans-serif}
+.pew-cert-header{text-align:center;padding:15px 10px 20px;border-bottom:2px solid #e2ecf5;margin-bottom:20px}
+.pew-cert-badge-top{display:inline-block;padding:4px 14px;background:#0d4c82;color:#fff;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.pew-cert-header h2{margin:6px 0;color:#0b3760;font-size:24px}
+.pew-cert-subtitle{margin:0;color:#557088;font-size:13px}
+
+.pew-cert-search-box{background:#f4f8fc;padding:22px 20px;border:1px solid #d3e2f0;border-radius:6px;margin-bottom:25px}
+.pew-cert-label{display:block;font-size:14px;font-weight:700;color:#1c4366;margin-bottom:8px}
+.pew-cert-input-group{display:flex;gap:10px}
+.pew-cert-input-group input{flex:1;padding:11px 14px;border:1px solid #afc7db;border-radius:4px;font-size:15px;color:#112e47}
+.pew-cert-input-group input:focus{outline:2px solid #2374b7;border-color:#2374b7}
+.pew-cert-btn{padding:11px 22px;background:#105794;color:#fff;border:none;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.pew-cert-btn:hover{background:#0a4373}
+
+.pew-cert-samples{margin-top:12px;font-size:12px;color:#607383}
+.pew-cert-samples-label{font-weight:700;margin-right:6px}
+.pew-cert-samples a{display:inline-block;margin-right:10px;color:#105794;background:#e3edf7;padding:3px 8px;border-radius:3px;text-decoration:none}
+.pew-cert-samples a:hover{text-decoration:underline;background:#d3e3f3}
+
+.pew-cert-result-card{background:#fff;border:2px solid #28784d;border-radius:8px;padding:22px;margin-bottom:25px;box-shadow:0 4px 15px rgba(0,0,0,.06)}
+.pew-cert-result-card.is-not-found{border-color:#d49733;background:#fffcf5}
+.pew-cert-result-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #dbe6ef;margin-bottom:18px}
+.pew-cert-status-badge{display:flex;align-items:center;gap:8px;color:#1e7545;font-size:15px}
+.pew-cert-status-badge .badge-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:#24824d;color:#fff;border-radius:50%;font-size:13px;font-weight:700}
+.pew-cert-print-btn{padding:6px 14px;background:#edf3f8;border:1px solid #b8cee0;color:#204b70;border-radius:4px;font-size:12px;cursor:pointer}
+.pew-cert-print-btn:hover{background:#dbe7f2}
+
+.pew-table-clean{width:100%;border-collapse:collapse;margin:0 0 15px}
+.pew-table-clean th,.pew-table-clean td{padding:10px 12px;border:1px solid #e4ecf3;font-size:13px;text-align:left;vertical-align:top}
+.pew-table-clean th{background:#f8fbfe;color:#335572;width:35%;font-weight:700}
+.pew-table-clean td{color:#1a2e40}
+.pew-table-clean code{background:#eaf2f9;padding:2px 8px;border-radius:3px;color:#0b4d82;font-size:13px;font-weight:700}
+.pew-tag-pass{display:inline-block;padding:3px 10px;background:#e5f7ed;color:#1f7e4a;border:1px solid #a3e2bc;border-radius:3px;font-weight:700;font-size:12px}
+
+.pew-cert-footer-note{padding-top:10px;border-top:1px dashed #dbe5ee;font-size:11px;color:#708494;line-height:1.5}
+
+.pew-cert-not-found-inner{text-align:center;padding:15px}
+.pew-not-found-icon{font-size:36px;margin-bottom:10px}
+.pew-cert-not-found-inner h3{color:#a86719;margin:0 0 8px;font-size:18px}
+.pew-cert-not-found-inner p{margin:4px 0;color:#5c5039;font-size:13px}
+.pew-help-hint{color:#806f4d!important;font-size:12px!important;margin-top:10px!important}
+
+.pew-cert-instructions{margin-bottom:25px}
+.pew-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.pew-info-item{background:#f9fbfd;border:1px solid #e1ecf5;border-left:4px solid #145e9d;padding:16px;border-radius:4px}
+.pew-info-item h4{margin:0 0 8px;color:#114878;font-size:14px}
+.pew-info-item p{margin:0;color:#556d80;font-size:12px;line-height:1.6}
+
+.pew-cert-contact-card{background:#fbfbfb;border:1px solid #e7eaec;border-radius:6px;padding:18px 20px;margin-top:20px}
+.pew-cert-contact-card h4{margin:0 0 8px;color:#183c5c;font-size:14px}
+.pew-cert-contact-card p{margin:0 0 10px;color:#677b8b;font-size:12px}
+.pew-contact-inline{list-style:none;padding:0;margin:0;display:grid;gap:6px;font-size:12px;color:#2e4456}
+.pew-contact-inline a{color:#105794;text-decoration:none}
+.pew-contact-inline a:hover{text-decoration:underline}
+
+/* Admission Page Styles */
+.pew-admission-page{font-family:Arial,sans-serif;color:#1e3346;line-height:1.65}
+.pew-admission-hero{background:linear-gradient(135deg,#0c477d,#155e9e);color:#fff;padding:24px 20px;border-radius:6px;margin-bottom:25px}
+.pew-admission-hero h2{margin:0 0 8px;color:#fff;font-size:22px}
+.pew-admission-hero p{margin:0;color:#d8e8f8;font-size:13px}
+.pew-admission-badge{display:inline-block;padding:3px 10px;background:#f8aa27;color:#112a42;font-size:11px;font-weight:700;border-radius:3px;margin-bottom:10px}
+.pew-course-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:25px}
+.pew-course-box{background:#fff;border:1px solid #d3e2ee;border-top:4px solid #105794;border-radius:4px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.pew-course-box h3{margin:0 0 10px;color:#0b3c66;font-size:16px}
+.pew-course-box ul{padding-left:18px;margin:0 0 12px;font-size:13px;color:#385268}
+.pew-course-box ul li{margin-bottom:5px}
+.pew-facility-list{background:#f9fcfe;border:1px solid #d9e7f2;border-radius:6px;padding:20px;margin-bottom:25px}
+.pew-facility-list h3{margin-top:0;color:#0d4677;font-size:16px}
+.pew-facility-list ol{padding-left:20px;margin:0;font-size:13px;color:#2f495e}
+.pew-facility-list ol li{margin-bottom:8px}
+
+@media(max-width:700px){
+  .pew-gallery-managed{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pew-gallery-managed li a,.pew-gallery-managed li a img{height:130px}
+  .pew-cert-input-group{flex-direction:column}
+  .pew-info-grid{grid-template-columns:1fr}
+  .pew-course-cards{grid-template-columns:1fr}
+  .pew-table-clean th{width:45%}
+}
+@media(max-width:420px){
+  .pew-gallery-managed{grid-template-columns:1fr}
+}
+@media print{
+  body *{visibility:hidden}
+  #pew-certificate-card-print,#pew-certificate-card-print *{visibility:visible}
+  #pew-certificate-card-print{position:absolute;left:0;top:0;width:100%;border:none;box-shadow:none}
+  .pew-cert-print-btn{display:none}
+}

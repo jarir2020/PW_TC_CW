@@ -22,6 +22,15 @@ Supports Thumbs: true
 	left:0px;
 	display:none;
 }
+
+/* Keep the supplied photos inside the fixed reference banner frame. */
+.slider_theame .nivoSlider img,
+.slider_theame .nivoSlider .nivo-main-image {
+	width:100%;
+	height:284px !important;
+	object-fit:cover;
+	object-position:center;
+}
 .slider_theame .nivoSlider a {
 	border:0;
 	display:block;
