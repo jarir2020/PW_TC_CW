@@ -192,7 +192,10 @@ function pew_admin_panel_render_certificates() {
                 <input type="hidden" name="certificate_id" value="<?php echo esc_attr( $editing ? $editing->ID : 0 ); ?>">
                 <?php wp_nonce_field( 'pew_save_certificate', 'pew_certificate_nonce' ); ?>
                 <label>Trainee Name (শিক্ষার্থীর নাম)<input type="text" name="student_name" required value="<?php echo esc_attr( $cert_details ? $cert_details['name'] : '' ); ?>" placeholder="e.g. Md. Arif Hasan"></label>
-                <label>Certificate No (সনদ নম্বর)<input type="text" name="cert_no" required value="<?php echo esc_attr( $cert_details ? $cert_details['cert_no'] : '' ); ?>" placeholder="e.g. PEW-2024-EL-0101"></label>
+                <div class="pew-admin-fields-two">
+                    <label>Registration Number (রেজিস্ট্রেশন নম্বর)<input type="text" name="reg_no" required value="<?php echo esc_attr( $cert_details ? $cert_details['reg_no'] : '' ); ?>" placeholder="e.g. PEW-2024-REG-0101"></label>
+                    <label>Certificate Serial / ID (সনদ নম্বর)<input type="text" name="cert_no" value="<?php echo esc_attr( $cert_details ? $cert_details['cert_no'] : '' ); ?>" placeholder="ঐচ্ছিক (ফাঁকা রাখলে রেজিস্ট্রেশন নম্বর প্রযোজ্য হবে)"></label>
+                </div>
                 <label>Father's Name (পিতার নাম)<input type="text" name="father_name" value="<?php echo esc_attr( $cert_details ? $cert_details['father_name'] : '' ); ?>" placeholder="e.g. Md. Rafiqul Islam"></label>
                 <label>Course / Trade (ট্রেড / কোর্স)
                     <select name="course" style="width:100%;padding:10px;border:1px solid #cbd9e3;background:#fff;color:#213c50;font:inherit;">
@@ -200,17 +203,18 @@ function pew_admin_panel_render_certificates() {
                         <option value="Welding" <?php selected( $cert_details ? $cert_details['course'] : '', 'Welding' ); ?>>Welding (৪ মাস মেয়াদী)</option>
                     </select>
                 </label>
+                <label>Training Period / Duration (প্রশিক্ষণের মেয়াদকাল: কত তারিখ হতে কত তারিখ অবধি)<input type="text" name="duration" value="<?php echo esc_attr( $cert_details ? $cert_details['duration'] : '৪ মাস মেয়াদী (০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪)' ); ?>" placeholder="e.g. ০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪"></label>
                 <div class="pew-admin-fields-three">
                     <label>Roll No<input type="text" name="roll" value="<?php echo esc_attr( $cert_details ? $cert_details['roll'] : '' ); ?>" placeholder="240101"></label>
                     <label>Batch<input type="text" name="batch" value="<?php echo esc_attr( $cert_details ? $cert_details['batch'] : 'Batch 01 (SICIP-BEIOA)' ); ?>" placeholder="Batch 01"></label>
                     <label>Session<input type="text" name="session" value="<?php echo esc_attr( $cert_details ? $cert_details['session'] : '2024' ); ?>" placeholder="2024"></label>
                 </div>
                 <div class="pew-admin-fields-three">
-                    <label>Result / Grade<input type="text" name="result" value="<?php echo esc_attr( $cert_details ? $cert_details['result'] : 'Competent (A+)' ); ?>" placeholder="Competent (A+)"></label>
-                    <label>Issue Date<input type="text" name="issue_date" value="<?php echo esc_attr( $cert_details ? $cert_details['issue_date'] : wp_date( 'Y-m-d' ) ); ?>" placeholder="2024-07-15"></label>
+                    <label>Result / Grade (ফলাফল)<input type="text" name="result" value="<?php echo esc_attr( $cert_details ? $cert_details['result'] : 'Competent (A+)' ); ?>" placeholder="Competent (A+)"></label>
+                    <label>Issue Date / Submission (ইস্যুর তারিখ)<input type="text" name="issue_date" value="<?php echo esc_attr( $cert_details ? $cert_details['issue_date'] : wp_date( 'Y-m-d' ) ); ?>" placeholder="2024-07-15"></label>
                     <label>Status<input type="text" name="status" value="<?php echo esc_attr( $cert_details ? $cert_details['status'] : 'Valid' ); ?>" placeholder="Valid"></label>
                 </div>
-                <button class="pew-admin-button" type="submit"><?php echo $editing ? 'Update certificate' : 'Save certificate'; ?></button>
+                <button class="pew-admin-button" type="submit"><?php echo $editing ? 'Update certificate' : 'Issue / Save certificate'; ?></button>
             </form>
         </div>
         <div class="pew-admin-card">
@@ -220,20 +224,20 @@ function pew_admin_panel_render_certificates() {
                     <table class="pew-admin-table">
                         <thead>
                             <tr>
-                                <th>Cert No</th>
+                                <th>Reg / Cert No</th>
                                 <th>Name & Course</th>
-                                <th>Batch / Result</th>
+                                <th>Period / Result</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ( $items as $item ) :
-                                $d = function_exists( 'pew_get_certificate_details' ) ? pew_get_certificate_details( $item->ID ) : array( 'cert_no' => $item->ID, 'name' => $item->post_title, 'course' => '', 'batch' => '', 'result' => 'Competent' );
+                                $d = function_exists( 'pew_get_certificate_details' ) ? pew_get_certificate_details( $item->ID ) : array( 'reg_no' => $item->ID, 'cert_no' => $item->ID, 'name' => $item->post_title, 'course' => '', 'batch' => '', 'result' => 'Competent', 'duration' => '' );
                             ?>
                             <tr>
-                                <td><code><?php echo esc_html( $d['cert_no'] ); ?></code></td>
+                                <td><code><?php echo esc_html( $d['reg_no'] ); ?></code></td>
                                 <td><strong><?php echo esc_html( $d['name'] ); ?></strong><small class="pew-admin-table-caption"><?php echo esc_html( $d['course'] ); ?></small></td>
-                                <td><?php echo esc_html( $d['batch'] ); ?><br><span class="pew-admin-status is-published"><?php echo esc_html( $d['result'] ); ?></span></td>
+                                <td><small><?php echo esc_html( $d['duration'] ); ?></small><br><span class="pew-admin-status is-published"><?php echo esc_html( $d['result'] ); ?></span></td>
                                 <td>
                                     <a href="<?php echo esc_url( pew_admin_panel_page_url( 'certificates' ) . '&edit=' . $item->ID ); ?>">Edit</a>
                                     <form class="pew-admin-inline-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
@@ -553,8 +557,16 @@ function pew_admin_save_certificate() {
         pew_admin_panel_redirect( 'certificates', 'error' );
     }
     $name    = isset( $_POST['student_name'] ) ? sanitize_text_field( wp_unslash( $_POST['student_name'] ) ) : '';
+    $reg_no  = isset( $_POST['reg_no'] ) ? sanitize_text_field( wp_unslash( $_POST['reg_no'] ) ) : '';
     $cert_no = isset( $_POST['cert_no'] ) ? sanitize_text_field( wp_unslash( $_POST['cert_no'] ) ) : '';
-    if ( '' === $name || '' === $cert_no ) {
+
+    if ( '' === $cert_no && '' !== $reg_no ) {
+        $cert_no = $reg_no;
+    }
+    if ( '' === $reg_no && '' !== $cert_no ) {
+        $reg_no = $cert_no;
+    }
+    if ( '' === $name || '' === $reg_no ) {
         pew_admin_panel_redirect( 'certificates', 'error' );
     }
     $post_data = array(
@@ -566,7 +578,7 @@ function pew_admin_save_certificate() {
         $post_data['ID'] = $cert_id;
         $saved_id        = wp_update_post( wp_slash( $post_data ), true );
     } else {
-        $post_data['post_name'] = sanitize_title( $cert_no );
+        $post_data['post_name'] = sanitize_title( $reg_no );
         $saved_id               = wp_insert_post( wp_slash( $post_data ), true );
     }
     if ( is_wp_error( $saved_id ) ) {
@@ -574,9 +586,11 @@ function pew_admin_save_certificate() {
     }
 
     $meta_fields = array(
+        'reg_no'      => '_pew_cert_reg_no',
         'cert_no'     => '_pew_cert_no',
         'father_name' => '_pew_cert_father',
         'course'      => '_pew_cert_course',
+        'duration'    => '_pew_cert_duration',
         'roll'        => '_pew_cert_roll',
         'batch'       => '_pew_cert_batch',
         'session'     => '_pew_cert_session',
@@ -585,7 +599,13 @@ function pew_admin_save_certificate() {
         'status'      => '_pew_cert_status',
     );
     foreach ( $meta_fields as $post_key => $meta_key ) {
-        $val = isset( $_POST[ $post_key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $post_key ] ) ) : '';
+        if ( 'reg_no' === $post_key ) {
+            $val = $reg_no;
+        } elseif ( 'cert_no' === $post_key ) {
+            $val = $cert_no;
+        } else {
+            $val = isset( $_POST[ $post_key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $post_key ] ) ) : '';
+        }
         update_post_meta( $saved_id, $meta_key, $val );
     }
     pew_admin_panel_redirect( 'certificates', 'cert_saved' );

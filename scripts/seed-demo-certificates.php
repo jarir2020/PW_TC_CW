@@ -16,10 +16,12 @@ if ( ! post_type_exists( 'pew_certificate' ) ) {
 
 $certificates = array(
 	array(
+		'reg_no'      => 'PEW-2024-REG-0101',
 		'cert_no'     => 'PEW-2024-EL-0101',
 		'name'        => 'মোঃ আরিফ হাসান (Md. Arif Hasan)',
 		'father_name' => 'মোঃ রফিকুল ইসলাম',
 		'course'      => 'Electrical Installation and Maintenance',
+		'duration'    => '৪ মাস মেয়াদী (০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪)',
 		'roll'        => '240101',
 		'batch'       => 'Batch 01 (SICIP-BEIOA)',
 		'session'     => '2024',
@@ -28,10 +30,12 @@ $certificates = array(
 		'status'      => 'Valid',
 	),
 	array(
+		'reg_no'      => 'PEW-2024-REG-0102',
 		'cert_no'     => 'PEW-2024-WD-0102',
 		'name'        => 'মোঃ তানভীর আহমেদ (Md. Tanvir Ahmed)',
 		'father_name' => 'মোঃ শাহজাহান আলী',
 		'course'      => 'Welding',
+		'duration'    => '৪ মাস মেয়াদী (০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪)',
 		'roll'        => '240102',
 		'batch'       => 'Batch 01 (SICIP-BEIOA)',
 		'session'     => '2024',
@@ -40,10 +44,12 @@ $certificates = array(
 		'status'      => 'Valid',
 	),
 	array(
+		'reg_no'      => 'PEW-2024-REG-0103',
 		'cert_no'     => 'PEW-2024-EL-0103',
 		'name'        => 'মোছাঃ সুমাইয়া খাতুন (Mst. Sumaiya Khatun)',
 		'father_name' => 'মোঃ আব্দুল করিম',
 		'course'      => 'Electrical Installation and Maintenance',
+		'duration'    => '৪ মাস মেয়াদী (০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪)',
 		'roll'        => '240103',
 		'batch'       => 'Batch 01 (SICIP-BEIOA)',
 		'session'     => '2024',
@@ -80,9 +86,11 @@ foreach ( $certificates as $cert ) {
 		);
 	}
 
+	update_post_meta( $post_id, '_pew_cert_reg_no', $cert['reg_no'] );
 	update_post_meta( $post_id, '_pew_cert_no', $cert['cert_no'] );
 	update_post_meta( $post_id, '_pew_cert_father', $cert['father_name'] );
 	update_post_meta( $post_id, '_pew_cert_course', $cert['course'] );
+	update_post_meta( $post_id, '_pew_cert_duration', $cert['duration'] );
 	update_post_meta( $post_id, '_pew_cert_roll', $cert['roll'] );
 	update_post_meta( $post_id, '_pew_cert_batch', $cert['batch'] );
 	update_post_meta( $post_id, '_pew_cert_session', $cert['session'] );

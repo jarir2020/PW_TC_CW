@@ -16,7 +16,7 @@ function pew_get_certificate( $query ) {
 		return null;
 	}
 
-	// 1. Direct meta query on cert_no or roll
+	// 1. Direct meta query on reg_no, cert_no or roll
 	$posts = get_posts(
 		array(
 			'post_type'      => 'pew_certificate',
@@ -24,6 +24,11 @@ function pew_get_certificate( $query ) {
 			'posts_per_page' => 1,
 			'meta_query'     => array(
 				'relation' => 'OR',
+				array(
+					'key'     => '_pew_cert_reg_no',
+					'value'   => $query,
+					'compare' => '=',
+				),
 				array(
 					'key'     => '_pew_cert_no',
 					'value'   => $query,
@@ -65,15 +70,30 @@ function pew_get_certificate( $query ) {
  * Get all details of a certificate.
  */
 function pew_get_certificate_details( $post_id ) {
+	$reg_no  = get_post_meta( $post_id, '_pew_cert_reg_no', true );
+	$cert_no = get_post_meta( $post_id, '_pew_cert_no', true );
+	if ( ! $reg_no && $cert_no ) {
+		$reg_no = $cert_no;
+	}
+	if ( ! $cert_no && $reg_no ) {
+		$cert_no = $reg_no;
+	}
+	if ( ! $cert_no ) {
+		$cert_no = 'PEW-' . $post_id;
+		$reg_no  = $cert_no;
+	}
+
 	return array(
 		'id'          => $post_id,
 		'name'        => get_the_title( $post_id ),
-		'cert_no'     => get_post_meta( $post_id, '_pew_cert_no', true ) ?: ( 'PEW-' . $post_id ),
+		'reg_no'      => $reg_no,
+		'cert_no'     => $cert_no,
 		'course'      => get_post_meta( $post_id, '_pew_cert_course', true ) ?: 'Technical Trade Course',
 		'father_name' => get_post_meta( $post_id, '_pew_cert_father', true ) ?: '',
 		'roll'        => get_post_meta( $post_id, '_pew_cert_roll', true ) ?: '',
 		'batch'       => get_post_meta( $post_id, '_pew_cert_batch', true ) ?: 'Batch 01 (SICIP-BEIOA)',
 		'session'     => get_post_meta( $post_id, '_pew_cert_session', true ) ?: '2024',
+		'duration'    => get_post_meta( $post_id, '_pew_cert_duration', true ) ?: '৪ মাস মেয়াদী (০১ জানুয়ারি ২০২৪ হতে ৩০ এপ্রিল ২০২৪)',
 		'result'      => get_post_meta( $post_id, '_pew_cert_result', true ) ?: 'Competent (উত্তীর্ণ)',
 		'issue_date'  => get_post_meta( $post_id, '_pew_cert_date', true ) ?: '2024-07-15',
 		'status'      => get_post_meta( $post_id, '_pew_cert_status', true ) ?: 'Valid',
@@ -100,15 +120,15 @@ function pew_certificate_verification_shortcode() {
 
 		<div class="pew-cert-search-box">
 			<form method="get" action="<?php echo esc_url( dist_faithful_page_url( 'certificate-verification' ) ); ?>" class="pew-cert-form">
-				<label for="cert_search_input" class="pew-cert-label">সনদ নম্বর অথবা রোল নম্বর লিখুন:</label>
+				<label for="cert_search_input" class="pew-cert-label">শিক্ষার্থীর রেজিস্ট্রেশন নম্বর (অথবা সনদ / রোল নম্বর) লিখুন:</label>
 				<div class="pew-cert-input-group">
-					<input type="text" id="cert_search_input" name="cert_no" value="<?php echo esc_attr( $search_query ); ?>" placeholder="e.g. PEW-2024-EL-0101" required autocomplete="off">
+					<input type="text" id="cert_search_input" name="cert_no" value="<?php echo esc_attr( $search_query ); ?>" placeholder="e.g. PEW-2024-REG-0101 বা PEW-2024-EL-0101" required autocomplete="off">
 					<button type="submit" class="pew-cert-btn">যাচাই করুন <span>🔍</span></button>
 				</div>
 			</form>
 			<div class="pew-cert-samples">
 				<span class="pew-cert-samples-label">উদাহরণ নম্বর:</span>
-				<a href="<?php echo esc_url( add_query_arg( 'cert_no', 'PEW-2024-EL-0101', dist_faithful_page_url( 'certificate-verification' ) ) ); ?>">PEW-2024-EL-0101 (Electrical)</a>
+				<a href="<?php echo esc_url( add_query_arg( 'cert_no', 'PEW-2024-REG-0101', dist_faithful_page_url( 'certificate-verification' ) ) ); ?>">PEW-2024-REG-0101 (Electrical)</a>
 				<a href="<?php echo esc_url( add_query_arg( 'cert_no', 'PEW-2024-WD-0102', dist_faithful_page_url( 'certificate-verification' ) ) ); ?>">PEW-2024-WD-0102 (Welding)</a>
 			</div>
 		</div>
@@ -141,15 +161,25 @@ function pew_certificate_verification_shortcode() {
 								<td><strong style="color:#0f5699;"><?php echo esc_html( $cert['course'] ); ?></strong></td>
 							</tr>
 							<tr>
+								<th>রেজিস্ট্রেশন নম্বর (Registration No)</th>
+								<td><code><?php echo esc_html( $cert['reg_no'] ); ?></code></td>
+							</tr>
+							<?php if ( $cert['cert_no'] && $cert['cert_no'] !== $cert['reg_no'] ) : ?>
+							<tr>
 								<th>সনদ নম্বর (Certificate ID)</th>
 								<td><code><?php echo esc_html( $cert['cert_no'] ); ?></code></td>
 							</tr>
+							<?php endif; ?>
 							<?php if ( $cert['roll'] ) : ?>
 							<tr>
 								<th>রোল নম্বর (Roll Number)</th>
 								<td><?php echo esc_html( $cert['roll'] ); ?></td>
 							</tr>
 							<?php endif; ?>
+							<tr>
+								<th>প্রশিক্ষণের মেয়াদকাল (Training Period)</th>
+								<td><?php echo esc_html( $cert['duration'] ); ?></td>
+							</tr>
 							<tr>
 								<th>প্রশিক্ষণ ব্যাচ (Batch & Session)</th>
 								<td><?php echo esc_html( $cert['batch'] ); ?> (শিক্ষাবর্ষ: <?php echo esc_html( $cert['session'] ); ?>)</td>
@@ -159,7 +189,7 @@ function pew_certificate_verification_shortcode() {
 								<td><span class="pew-tag-pass"><?php echo esc_html( $cert['result'] ); ?></span></td>
 							</tr>
 							<tr>
-								<th>ইস্যুর তারিখ (Issue Date)</th>
+								<th>ইস্যুর তারিখ / সাবমিশন (Issue Date)</th>
 								<td><?php echo esc_html( $cert['issue_date'] ); ?></td>
 							</tr>
 							<tr>
