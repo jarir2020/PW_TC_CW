@@ -1,0 +1,103 @@
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {clear: both;}
+.newsRow .clearfix:after{clear:none}
+
+.clearfix {
+	width:100%;
+	*zoom: 1;
+	float:left;
+}
+.settingsIn .clearfix {
+	width:20%;/*266px*/
+	*zoom: 1;
+	float:left;
+}
+.customLft .clearfix, 
+.submitRgt .clearfix, 
+.boxStatus2 .clearfix,
+.boxStatus .clearfix{width:auto}
+.checkbox-cont3 .clearfix{width:38%}
+
+.prettycheckbox,.prettyradio {
+	float:left;
+    padding:4px 15px 7px 0;
+    margin:0;
+}
+.prettyradio{ padding-top:0;}
+.prettycheckbox a,
+.prettyradio a{
+    width:23px;
+    height:21px;
+    background:url(../images/admission/chk.png) no-repeat;
+    display: block;
+    float: left;
+    cursor: pointer;
+    margin:0 10px 0 0;
+	background-position:left top ;
+}
+.prettyradio a{width:24px; height:24px; background:url(../images/checkbox2.png) no-repeat left -26px}
+
+.prettycheckbox a:focus{outline:0 none}
+.prettycheckbox a:focus{background-position:0 top}
+
+.prettycheckbox a.checked{background-position:left bottom}
+.prettyradio a.checked{background-position:left top}
+
+.prettycheckbox label,
+.prettyradio label {
+    color: #2F5500;
+    display: block;
+    font-size: 20px;
+    overflow: hidden;
+    padding:0 0 16px;
+}
+.checkbox-cont1 .prettycheckbox label,
+.checkbox-cont1 .prettyradio label{
+	font-family: 'LiberationSans-Bold';
+	line-height:20px;/*15px*/
+    font-size:1em;/*12px*/
+	color:#7c7c7c;
+	padding:7px 0 0 ;
+}
+.quotaWrap .prettycheckbox label{width:auto; display:inline; float:left}
+/*.prettycheckbox label{padding:6px 0 0;}
+.customWpr .customTop .customCont .prettycheckbox label,
+.megaBoxOrderForm .prettycheckbox label{padding:0}*/
+.settingsIn .prettycheckbox label{
+	font-family:'helvetica-condensed', Arial, Helvetica, sans-serif;
+	line-height:1.8em;/*33px*/
+    font-size:1.300em;/*21px*/
+}
+
+.checkbox-cont2 .prettycheckbox label,
+.checkbox-cont3 .prettycheckbox label{
+	width:60%;
+	font-family: 'LiberationSans-Bold', Arial, Helvetica, sans-serif;
+	line-height:15px;/*15px*/
+    font-size:0.857em;/*12px*/
+	color:#6e6e6e;
+}
+.checkbox-cont2 .prettycheckbox label{width:25%}
+
+.checkbox-cont{width:100%; padding:5px 0 8px; overflow:hidden}
+
+.checkbox-cont3 span{
+	padding-top:10px;
+	font-family: 'LiberationSans-Bold', Arial, Helvetica, sans-serif;
+	line-height:15px;/*15px*/
+    font-size:0.857em;/*12px*/
+	color:#6e6e6e;
+	float: left;
+}
+.checkbox-cont span{
+	padding-top:0;
+	font-family:'helvetica-condensed', Arial, Helvetica, sans-serif;
+	line-height:3.1em;/*55px*/
+    font-size:1.3em;/*21px*/
+	color:#000;
+	float: left;
+}

@@ -1,0 +1,1 @@
+<?php get_header(); ?><main id="main-content" class="inner-page"><div class="container inner-page__wrap"><div class="page-intro"><span class="kicker">Pew Training Center</span><h1><?php the_title(); ?></h1></div><?php while ( have_posts() ) : the_post(); ?><article class="prose"><?php the_content(); ?></article><?php endwhile; ?></div></main><?php get_footer(); ?>

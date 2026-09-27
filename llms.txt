@@ -1,0 +1,31 @@
+# PW_TC_CW
+
+## Summary
+
+WordPress implementation of the Dinajpur Institute of Science & Technology public site.
+
+## Frontend
+
+- Active theme: wp-content/themes/dist-faithful
+- Reference site: https://distdinajpur.edu.bd/
+- The theme preserves the reference HTML structure and imports the reference CSS, JavaScript, fonts, logos, and gallery images.
+
+## Backend
+
+- Plugin: wp-content/plugins/pew-site-core
+- Content types include notices, courses, staff, results, documents, gallery items, and events.
+- WordPress pages hold copied public page content.
+- pew_student and pew_teacher roles use the private dashboard shortcode.
+
+## Local commands
+
+~~~bash
+bash scripts/prepare-wordpress.sh
+bash scripts/serve-wordpress.sh
+~~~
+
+The local fast-browse URL is normally http://127.0.0.1:8090/; the server script reports a fallback port if needed.
+
+## Sensitive files
+
+.env, wp-config.php, runtime logs, uploads, caches, and local generated artifacts are not repository content.

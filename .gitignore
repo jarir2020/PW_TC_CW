@@ -1,0 +1,38 @@
+# Local secrets and configuration
+.env
+wp-config.php
+*.key
+*.pem
+
+# WordPress runtime/generated content
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/debug.log
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+*.log
+
+# Local databases and containers
+*.sqlite
+*.sqlite3
+.docker-data/
+
+# Dependency/build/tooling output
+node_modules/
+vendor/
+coverage/
+.phpunit.cache/
+.sass-cache/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.codex/
+.agents/
+
+# Temporary verification artifacts
+*-check.png
+*-check.jpg

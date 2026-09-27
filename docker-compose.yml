@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Copy .env.example to .env first}
+      MYSQL_USER: ${MYSQL_USER:?Copy .env.example to .env first}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Copy .env.example to .env first}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Copy .env.example to .env first}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - pew_mysql:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER:?Copy .env.example to .env first}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD:?Copy .env.example to .env first}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE:?Copy .env.example to .env first}
+      WORDPRESS_TABLE_PREFIX: pew_
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./wp-content/themes/pew-training-center:/var/www/html/wp-content/themes/pew-training-center
+      - ./wp-content/plugins/pew-site-core:/var/www/html/wp-content/plugins/pew-site-core
+
+volumes:
+  pew_mysql:
+  wordpress_data:
+

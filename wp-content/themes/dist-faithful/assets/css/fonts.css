@@ -1,0 +1,91 @@
+@charset "utf-8";
+/* CSS Document */
+
+@font-face {
+    font-family: 'sutonnymjregular';
+    src: url('../fonts/sutom/sutom___-webfont.eot');
+    src: url('../fonts/sutom/sutom___-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/sutom/sutom___-webfont.woff') format('woff'),
+         url('../fonts/sutom/sutom___-webfont.ttf') format('truetype'),
+         url('../fonts/sutom/sutom___-webfont.svg#sutonnymjregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'libre-baskerville';
+    src: url('../fonts/librebaskerville/librebaskerville-regular-webfont.eot');
+    src: url('../fonts/librebaskerville/librebaskerville-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/librebaskerville/librebaskerville-regular-webfont.woff') format('woff'),
+         url('../fonts/librebaskerville/librebaskerville-regular-webfont.ttf') format('truetype'),
+         url('../fonts/librebaskerville/librebaskerville-regular-webfont.svg#libre-baskerville') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family:'old-english-text-mtregular';
+    src: url('../fonts/old-English-Text-MT/oldengl-webfont.eot');
+    src: url('../fonts/old-English-Text-MT/oldengl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/old-English-Text-MT/oldengl-webfont.woff') format('woff'),
+         url('../fonts/old-English-Text-MT/oldengl-webfont.ttf') format('truetype'),
+         url('../fonts/old-English-Text-MT/oldengl-webfont.svg#old-english-text-mtregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+	font-family: 'BebasRegular';
+	src: url('../fonts/Bebas/bebas-webfont.eot');
+	src: local('☺'), 
+	url('../fonts/Bebas/bebas-webfont.woff') format('woff'),
+	url('../fonts/Bebas/bebas-webfont.ttf') format('truetype'), 
+	url('../fonts/Bebas/bebas-webfont.svg#webfontgcjp6zcJ') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+    font-family: 'goudy-stoutregular';
+    src: url('../fonts/goudysto/goudysto-webfont.eot');
+    src: url('../fonts/goudysto/goudysto-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/goudysto/goudysto-webfont.woff') format('woff'),
+         url('../fonts/goudysto/goudysto-webfont.ttf') format('truetype'),
+         url('../fonts/goudysto/goudysto-webfont.svg#goudy-stoutregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'libre-baskervillebold';
+    src: url('../fonts/librebaskerville-bold/librebaskerville-bold-webfont.eot');
+    src: url('../fonts/librebaskerville-bold/librebaskerville-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/librebaskerville-bold/librebaskerville-bold-webfont.woff') format('woff'),
+         url('../fonts/librebaskerville-bold/librebaskerville-bold-webfont.ttf') format('truetype'),
+         url('../fonts/librebaskerville-bold/librebaskerville-bold-webfont.svg#libre-baskervillebold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'baileyregular';
+    src: url('../fonts/baileyb/baileyb-webfont.eot');
+    src: url('../fonts/baileyb/baileyb-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/baileyb/baileyb-webfont.woff') format('woff'),
+         url('../fonts/baileyb/baileyb-webfont.ttf') format('truetype'),
+         url('../fonts/baileyb/baileyb-webfont.svg#baileyregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face{
+    font-family:'Shelley-Volante-BT';
+    src: url('../fonts/Shelley-Volante-BT/Shelley-Volante-BT.eot');
+    src: url('../fonts/Shelley-Volante-BT/Shelley-Volante-BT.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Shelley-Volante-BT/Shelley-Volante-BT.woff') format('woff'),
+         url('../fonts/Shelley-Volante-BT/Shelley-Volante-BT.ttf') format('truetype'),
+         url('../fonts/Shelley-Volante-BT/Shelley-Volante-BT.svg#Shelley-Volante-BT') format('svg');
+    font-weight:normal;
+    font-style:normal;
+}
+
