@@ -17,7 +17,8 @@ function dist_faithful_setup() {
 add_action( 'after_setup_theme', 'dist_faithful_setup' );
 
 function dist_faithful_asset( $path ) {
-	return trailingslashit( get_template_directory_uri() ) . 'assets/' . ltrim( $path, '/' );
+	$asset_url = trailingslashit( get_template_directory_uri() ) . 'assets/' . ltrim( $path, '/' );
+	return wp_make_link_relative( $asset_url );
 }
 
 function dist_faithful_enqueue_styles() {
