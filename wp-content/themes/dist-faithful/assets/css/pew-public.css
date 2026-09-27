@@ -111,3 +111,13 @@
   width: auto !important;
   max-width: 550px;
 }
+
+/* Header logo proportions */
+#logo {
+  max-width: 160px;
+}
+#logo img {
+  max-height: 105px;
+  width: auto;
+  object-fit: contain;
+}

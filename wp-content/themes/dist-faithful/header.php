@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <header class="header">
 	<div class="hdr_wrap">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" id="logo"><img src="<?php echo esc_url( dist_faithful_asset( 'uploads/logo.png' ) ); ?>" alt="PEW Training Center"></a>
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" id="logo"><img src="<?php echo esc_url( dist_faithful_asset( 'uploads/new-logo.jpeg' ) ); ?>" alt="PEW Training Center"></a>
 		<div class="hdrRgt">
 			<div id="block-8" class="block block-search hdrForm"><div class="block-body"><form id="searchform" class="hdrForm" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>"><input name="s" class="txtBox1" size="10" type="text" id="q"><input class="subBtn1" type="submit" value="Submit"></form></div></div>
 			<div id="block-16" class="block block-social_icon hdrIcon"><div class="block-body"><ul class="menu"><li><a href="<?php echo esc_url( home_url( '/feed/' ) ); ?>" class="icon5"><span>Feed</span></a></li><li><a href="https://www.linkedin.com" class="icon4" target="_blank"><span>Linkedin</span></a></li><li><a href="https://www.youtube.com" class="icon3" target="_blank"><span>Youtube</span></a></li><li><a href="https://www.twitter.com" class="icon2" target="_blank"><span>Twitter</span></a></li><li><a href="https://www.facebook.com/pewtc" class="icon1" target="_blank" rel="noopener noreferrer"><span>Facebook</span></a></li></ul></div></div>
