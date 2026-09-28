@@ -49,7 +49,11 @@ add_action( 'init', 'pew_ensure_admin_panel_page', 30 );
 
 function pew_admin_panel_assets() {
     if ( is_page( 'admin-panel' ) ) {
-        wp_enqueue_style( 'pew-admin-panel', plugins_url( 'assets/admin-panel.css', dirname( __DIR__ ) . '/pew-site-core.php' ), array(), '1.0.0' );
+        // Keep the panel stylesheet same-origin when WordPress is exposed
+        // through a public tunnel. The absolute plugin URL can otherwise
+        // retain the local PHP host and port (for example, 127.0.0.1:8090).
+        $stylesheet_url = plugins_url( 'assets/admin-panel.css', dirname( __DIR__ ) . '/pew-site-core.php' );
+        wp_enqueue_style( 'pew-admin-panel', wp_make_link_relative( $stylesheet_url ), array(), '1.0.0' );
     }
 }
 add_action( 'wp_enqueue_scripts', 'pew_admin_panel_assets', 30 );
