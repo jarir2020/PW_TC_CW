@@ -1,8 +1,12 @@
 # Local secrets and configuration
 .env
+.env.*
+.env.production
 wp-config.php
 *.key
 *.pem
+Antigravity-x64/
+icon.png
 
 # WordPress runtime/generated content
 wp-content/uploads/
@@ -12,6 +16,7 @@ wp-content/debug.log
 wp-content/advanced-cache.php
 wp-content/object-cache.php
 *.log
+*.lock
 
 # Local databases and containers
 *.sqlite
