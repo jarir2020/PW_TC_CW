@@ -1,6 +1,7 @@
 /* Client feedback 02: expose only Electrical and Welding in the course selector. */
 .pew-course-selector {
 	width: 198px;
+	margin-bottom: 38px;
 	background-image: none;
 }
 

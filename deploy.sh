@@ -31,6 +31,7 @@ fi
 
 CHECK_ONLY=false
 SYNC_ENV=false
+FULL_SYNC=false
 
 # Parse flags
 while [[ $# -gt 0 ]]; do
@@ -41,6 +42,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --sync-env)
             SYNC_ENV=true
+            shift
+            ;;
+        --full)
+            FULL_SYNC=true
             shift
             ;;
         *)
@@ -166,15 +171,88 @@ echo -e "${GREEN}OK${NC}"
 # Auto-detect SERVER_ROOT based on ftp_current_dir.txt
 # Rule: If ftp_current_dir.txt is in FTP root, that directory is public_html (SERVER_ROOT=".")
 SERVER_ROOT="."
-echo -e "  Remote target directory: ${SERVER_ROOT} (verified via ftp_current_dir.txt)"
 echo -e "${GREEN}  ✅ Pre-flight checks passed${NC}"
 echo ""
 
 # ============================================================
-# Step 2: Upload changed files via FTP (incremental sync)
+# Step 2: Upload changed files via FTP
 # ============================================================
 echo -e "${YELLOW}▶ Step 2: Uploading changed files to server...${NC}"
-echo -e "  Only files with different sizes or timestamps are transferred (incremental sync)."
+
+is_excluded() {
+    local f="$1"
+    case "$f" in
+        .git*|.gitignore|.kilo*|Antigravity*|.gemini*|scratch*) return 0 ;;
+        *.md|docker-compose.yml|license.txt|readme.html|deploy.sh) return 0 ;;
+        *.sqlite*|*.dump|*.log|*.lock) return 0 ;;
+        test_*|verify_*|*-check.*) return 0 ;;
+        wp-content/cache/*|wp-content/upgrade/*) return 0 ;;
+        .env*) return 0 ;;
+    esac
+    return 1
+}
+
+CHANGED_FILES=()
+DELETED_FILES=()
+
+if [ "$FULL_SYNC" = false ]; then
+    echo -e "  Mode: Selective sync (only deploying changed files)."
+    
+    # 1. Uncommitted working tree files (both tracked and untracked)
+    while IFS= read -r line || [ -n "$line" ]; do
+        [ -z "$line" ] && continue
+        status="${line:0:2}"
+        rel="${line:3}"
+        rel="${rel%\"}"
+        rel="${rel#\"}"
+        if [[ "$rel" =~ " -> " ]]; then
+            rel="${rel#* -> }"
+        fi
+        
+        if is_excluded "$rel"; then
+            continue
+        fi
+
+        if [[ "$status" =~ D ]]; then
+            DELETED_FILES+=("$rel")
+        else
+            [ -f "$LOCAL_ROOT/$rel" ] && CHANGED_FILES+=("$rel")
+        fi
+    done < <(git status --porcelain -uall 2>/dev/null || true)
+
+    # 2. Differences compared to remote tracking branch (origin/main)
+    if git rev-parse --verify origin/main >/dev/null 2>&1; then
+        while IFS= read -r rel || [ -n "$rel" ]; do
+            [ -z "$rel" ] && continue
+            if is_excluded "$rel"; then
+                continue
+            fi
+            if [ -f "$LOCAL_ROOT/$rel" ]; then
+                CHANGED_FILES+=("$rel")
+            else
+                DELETED_FILES+=("$rel")
+            fi
+        done < <(git diff --name-only origin/main 2>/dev/null || true)
+    fi
+
+    # Deduplicate arrays
+    if [ ${#CHANGED_FILES[@]} -gt 0 ]; then
+        mapfile -t CHANGED_FILES < <(printf '%s\n' "${CHANGED_FILES[@]}" | sort -u | grep -v '^$' || true)
+    fi
+    if [ ${#DELETED_FILES[@]} -gt 0 ]; then
+        mapfile -t DELETED_FILES < <(printf '%s\n' "${DELETED_FILES[@]}" | sort -u | grep -v '^$' || true)
+    fi
+
+    echo -e "  Found ${#CHANGED_FILES[@]} changed file(s) to upload, ${#DELETED_FILES[@]} file(s) to delete."
+    for cf in "${CHANGED_FILES[@]}"; do
+        echo -e "    • $cf"
+    done
+    for df in "${DELETED_FILES[@]}"; do
+        echo -e "    🗑️ $df (deleted)"
+    done
+else
+    echo -e "  Mode: Full mirror sync (--full)."
+fi
 echo ""
 
 LFTP_SCRIPT=$(mktemp /tmp/pewtc_deploy_XXXXXX.lftp)
@@ -185,50 +263,83 @@ set ftp:ssl-allow no
 set net:timeout 30
 set net:max-retries 3
 set ftp:passive-mode yes
-set mirror:parallel-directories yes
 set net:connection-limit 6
 open ftp://$FTP_USER:$FTP_PASS@$FTP_HOST:$FTP_PORT
 LFTP_EOF
 
-# Upload .htaccess and .env.production
-if [ "$CHECK_ONLY" = false ]; then
-    if [ -f "$LOCAL_ROOT/.htaccess" ]; then
-        cat >> "$LFTP_SCRIPT" << LFTP_EOF
-echo "  📄 Uploading .htaccess..."
+# Upload .htaccess and .env.production if requested or modified
+if [ -f "$LOCAL_ROOT/.htaccess" ]; then
+    if [ "$FULL_SYNC" = true ] || [ "$SYNC_ENV" = true ] || git status --porcelain "$LOCAL_ROOT/.htaccess" 2>/dev/null | grep -q . || git diff --name-only origin/main 2>/dev/null | grep -q "^\.htaccess$"; then
+        if [ "$CHECK_ONLY" = true ]; then
+            echo "echo \"WOULD_TRANSFER: .htaccess\"" >> "$LFTP_SCRIPT"
+        else
+            cat >> "$LFTP_SCRIPT" << LFTP_EOF
+echo "TRANSFER: .htaccess"
 put "$LOCAL_ROOT/.htaccess" -o "$SERVER_ROOT/.htaccess"
 LFTP_EOF
-    fi
-
-    if [ -f "$LOCAL_ROOT/.env.production" ]; then
-        cat >> "$LFTP_SCRIPT" << LFTP_EOF
-echo "  📄 Uploading remote environment config (.env)..."
-put "$LOCAL_ROOT/.env.production" -o "$SERVER_ROOT/.env"
-LFTP_EOF
+        fi
     fi
 fi
 
-# Top-level directories to sync
-SYNC_DIRS=("database" "scripts" "wp-admin" "wp-includes" "wp-content")
+if [ -f "$LOCAL_ROOT/.env.production" ]; then
+    if [ "$FULL_SYNC" = true ] || [ "$SYNC_ENV" = true ] || git status --porcelain "$LOCAL_ROOT/.env.production" 2>/dev/null | grep -q . || git diff --name-only origin/main 2>/dev/null | grep -q "^\.env\.production$"; then
+        if [ "$CHECK_ONLY" = true ]; then
+            echo "echo \"WOULD_TRANSFER: .env\"" >> "$LFTP_SCRIPT"
+        else
+            cat >> "$LFTP_SCRIPT" << LFTP_EOF
+echo "TRANSFER: .env"
+put "$LOCAL_ROOT/.env.production" -o "$SERVER_ROOT/.env"
+LFTP_EOF
+        fi
+    fi
+fi
 
-# 1. Sync root files first
-cat >> "$LFTP_SCRIPT" << LFTP_EOF
+if [ "$FULL_SYNC" = true ]; then
+    SYNC_DIRS=("database" "scripts" "wp-admin" "wp-includes" "wp-content")
+    cat >> "$LFTP_SCRIPT" << LFTP_EOF
 echo "FOLDER: root"
 mirror --no-recursion --reverse --verbose --no-perms --ignore-time --only-newer $MIRROR_MODE \
   --exclude-glob '.env*' --exclude-glob '*.sqlite*' --exclude-glob '*.dump' --exclude-glob '*.log' --exclude-glob '*.lock' --exclude-glob '*.md' --exclude-glob 'test_*.php' --exclude-glob 'verify_*.php' --exclude-glob '*-check.*' --exclude-glob 'docker-compose.yml' --exclude-glob 'license.txt' --exclude-glob 'readme.html' \
   "$LOCAL_ROOT/" "$SERVER_ROOT/"
 LFTP_EOF
 
-# 2. Sync main directories with recursion
-for sdir in "${SYNC_DIRS[@]}"; do
-    if [ -d "$LOCAL_ROOT/$sdir" ]; then
-        cat >> "$LFTP_SCRIPT" << LFTP_EOF
+    for sdir in "${SYNC_DIRS[@]}"; do
+        if [ -d "$LOCAL_ROOT/$sdir" ]; then
+            cat >> "$LFTP_SCRIPT" << LFTP_EOF
 echo "FOLDER: $sdir"
 mirror --reverse --verbose --no-perms --ignore-time --only-newer $MIRROR_MODE \
   --exclude-glob '.env*' --exclude-glob '*.sqlite*' --exclude-glob '*.dump' --exclude-glob '*.log' --exclude-glob '*.lock' --exclude-glob 'cache/' --exclude-glob 'upgrade/' \
   "$LOCAL_ROOT/$sdir/" "$SERVER_ROOT/$sdir/"
 LFTP_EOF
-    fi
-done
+        fi
+    done
+else
+    # Selective sync: upload changed files
+    for cf in "${CHANGED_FILES[@]}"; do
+        dir_name=$(dirname "$cf")
+        if [ "$CHECK_ONLY" = true ]; then
+            echo "echo \"WOULD_TRANSFER: $cf\"" >> "$LFTP_SCRIPT"
+        else
+            cat >> "$LFTP_SCRIPT" << LFTP_EOF
+mkdir -p -f "$SERVER_ROOT/$dir_name"
+echo "TRANSFER: $cf"
+put "$LOCAL_ROOT/$cf" -o "$SERVER_ROOT/$cf"
+LFTP_EOF
+        fi
+    done
+
+    # Remove deleted files
+    for df in "${DELETED_FILES[@]}"; do
+        if [ "$CHECK_ONLY" = true ]; then
+            echo "echo \"WOULD_DELETE: $df\"" >> "$LFTP_SCRIPT"
+        else
+            cat >> "$LFTP_SCRIPT" << LFTP_EOF
+echo "DELETED: $df"
+rm -f "$SERVER_ROOT/$df"
+LFTP_EOF
+        fi
+    done
+fi
 
 # Verification list of critical server files
 cat >> "$LFTP_SCRIPT" << LFTP_EOF
@@ -251,6 +362,22 @@ set +e
   /^FOLDER:/ { 
     folder = $0; sub(/^FOLDER: /, "", folder);
     print "  📁 Checking folder: " folder; fflush(); next 
+  }
+  /^TRANSFER:/ { 
+    f = $0; sub(/^TRANSFER: /, "", f);
+    print "  📄 Uploaded: " f; fflush(); next 
+  }
+  /^DELETED:/ { 
+    f = $0; sub(/^DELETED: /, "", f);
+    print "  🗑️  Deleted:   " f; fflush(); next 
+  }
+  /^WOULD_TRANSFER:/ { 
+    f = $0; sub(/^WOULD_TRANSFER: /, "", f);
+    print "  [DRY-RUN] Would upload: " f; fflush(); next 
+  }
+  /^WOULD_DELETE:/ { 
+    f = $0; sub(/^WOULD_DELETE: /, "", f);
+    print "  [DRY-RUN] Would delete: " f; fflush(); next 
   }
   /Transferring file/ { 
     f = $0; sub(/.*Transferring file ./, "", f); sub(/.$/, "", f);
