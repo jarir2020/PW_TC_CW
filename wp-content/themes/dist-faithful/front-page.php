@@ -31,7 +31,16 @@ $pew_course_settings = function_exists( 'pew_admin_course_settings' ) ? pew_admi
 		<div class="slider_theame">
 			<div id="slider" class="nivoSlider">
 				<?php
-				$slider_images = array( 'company/company-01.jpeg', 'company/company-02.jpeg', 'company/company-03.jpeg', 'company/company-04.jpeg', 'company/company-05.jpeg', 'company/company-06.jpeg', 'company/company-07.jpeg', 'company/company-08.jpeg', 'company/company-09.jpeg', 'company/company-10.jpeg' );
+				$slider_images = array(
+					'company/company-02.jpeg',
+					'company/company-04.jpeg',
+					'company/company-05.jpeg',
+					'company/company-06.jpeg',
+					'company/company-07.jpeg',
+					'company/company-08.jpeg',
+					'company/company-09.jpeg',
+				);
+				shuffle( $slider_images );
 				foreach ( $slider_images as $index => $slider_image ) :
 					?><img src="<?php echo esc_url( dist_faithful_asset( 'images/' . $slider_image ) ); ?>" title="<?php echo 0 === $index ? 'Pew Training Center' : ''; ?>" alt="Pew Training Center"><?php
 				endforeach;

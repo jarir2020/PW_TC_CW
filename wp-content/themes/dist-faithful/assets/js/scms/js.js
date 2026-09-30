@@ -147,7 +147,9 @@ jQuery(document).ready(function($){
 });
 
 jQuery(window).load(function() {
-    jQuery('#slider').nivoSlider();
+    jQuery('#slider').nivoSlider({
+        randomStart: true
+    });
 });
 
 function heightFixed(){

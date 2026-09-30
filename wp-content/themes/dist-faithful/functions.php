@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DIST_FAITHFUL_VERSION', '1.0.1' );
+define( 'DIST_FAITHFUL_VERSION', '1.0.2' );
 
 function dist_faithful_setup() {
 	add_theme_support( 'title-tag' );
